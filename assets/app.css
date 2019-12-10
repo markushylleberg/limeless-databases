@@ -1,0 +1,44 @@
+* {box-sizing:border-box;padding:0px;margin:0px}
+html {
+    font-size: 16px;
+    color: burlywood;
+}
+html, body, a, input, button, label, select, option {
+    cursor: url(http://cur.cursors-4u.net/sports/spo-1/spo28.ani), url(http://cur.cursors-4u.net/sports/spo-1/spo28.png), auto !important;
+}
+body {
+    background-image: url('spacejam.png');
+}
+
+/*____________________ TYPOGRAPHY ____________________*/
+p.strong {
+    font-weight: 900;
+    color: salmon;
+}
+a {
+    cursor: url(http://cur.cursors-4u.net/sports/spo-1/spo28.ani), url(http://cur.cursors-4u.net/sports/spo-1/spo28.png), auto !important;
+    color: blue;
+    text-decoration:underline;
+}
+h2 {
+    background-color: black;
+    color: #fff;
+}
+/*____________________ TABLES ____________________*/
+td, table {
+    border: 1px solid black;
+}
+/*____________________ HEADER ____________________*/
+header {
+    height: 65px;
+}
+/*____________________ CONTENT ____________________*/
+#pageContent {
+    min-height: calc(100vh - 65px);
+    display: grid;
+    justify-content: center;
+}
+.content-wrapper {
+    max-width: 90vw;
+    background-color: purple;
+}
