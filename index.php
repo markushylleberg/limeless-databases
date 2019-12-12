@@ -1,5 +1,7 @@
 <?php require_once('components/header.php'); ?>
+
 <div class="content-wrapper">
+
     <!-- CREATE USER -->
     <section id="01">
         <h2 class="section-title">Signup (add user)</h2>
@@ -102,6 +104,30 @@
 
                 </table>
             </div>
+            <p class="strong">Search user</p>
+            <form id="frmSearchUsers" action="">
+            <div class="input-pair">
+                <label for="txtFirstNameSearch">First Name</label>
+                <input id="txtFirstNameSearch" oninput="searchUsers(this)" type="text" name="txtFirstNameSearch">
+            </div>
+            <div class="input-pair">
+                <label for="firstDateRegistred">Member who registred betweeen this date: </label>
+                <input id="firstDateRegistred" oninput="searchUsers(this)" type="date" name="firstDateRegistred">
+                <label for="secondDateRegistred">and this date: </label>
+                <input id="secondDateRegistred" oninput="searchUsers(this)" type="date" name="secondDateRegistred">
+            </div>
+        </form>
+
+        <table id="searchResults">
+            <tr>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Registration date</th>
+            </tr>        
+        </table>
     </section>
 
     <!-- CREDIT CARDS -->
@@ -269,7 +295,7 @@
                 <label for="nCategoryId">Category id</label>
                 <input id="nCategoryId" type="text" name="nCategoryId">
             </div>
-            <button id="btnSubmitCreditCard" type="submit" name="btnSubmitIngredient" onclick="createFoodItem(this)">Charge</button>
+            <button id="btnSubmitFoodItem" type="submit" name="btnSubmitFoodItem" onclick="createFoodItem(this)">Add</button>
         </form>
     </section>
 
@@ -306,10 +332,173 @@
 
     <!-- CREATE RECIPE -->
     <section id="10">
-        <h2 class="section-title">CREATE RECIPE</h2>
+        <h2 class="section-title">Create recipe</h2>
+        <form action="" method="POST" id="formCreateRecipe">
+
+            <p class="strong">Recipe information</p>
+            <div class="input-pair">
+                <label for="txtTitle">Title</label>
+                <input id="txtTitle" name="txtTitle" type="text">
+            </div>
+
+            <div class="input-pair">
+                <label for="txtDescription">Description</label>
+                <textarea rows="12" columns="4" id="txtDescription" name="txtDescription" type="text"></textarea>
+            </div>
+
+            <div class="add-ingredient-wrapper">
+                <div class="input-pair">
+                    <label for="selRecipeIngredient1">Ingredient1</label>
+                    <select name="selRecipeIngredient1" id="selRecipeIngredient1">
+                        <?php
+                            // $pdo defined in components/header.php
+                            $sqlQuery = 'SELECT nFoodItemId, cName FROM tfooditem';
+                            $stmt = $pdo->prepare($sqlQuery);
+                            $stmt->execute();
+                            $objFoodItems = $stmt->fetchAll(); 
+                            
+                            foreach($objFoodItems as $objFoodItem) { ?>
+                                <option value="<?=$objFoodItem->nFoodItemId;?>"><?=$objFoodItem->cName;?></option>    
+                            <?php } ?>
+                    </select>
+                </div>
+                <div class="input-pair">
+                    <label for="selRecipeIngredientMeassurement1">Meassurement unit1</label>
+                    <select name="selRecipeIngredientMeassurement1" id="selRecipeIngredientMeassurement1">
+                        <?php
+                            // $pdo defined in components/header.php
+                            $sqlQuery = 'SELECT nMeassurementId, cName FROM tmeassurement';
+                            $stmt = $pdo->prepare($sqlQuery);
+                            $stmt->execute();
+                            $objMeassurements = $stmt->fetchAll(); 
+
+                            foreach($objMeassurements as $objMeassurement) { ?>
+                                <option value="<?=$objMeassurement->nMeassurementId;?>"><?=$objMeassurement->cName;?></option>    
+                            <?php } ?>
+                    </select>
+                </div>
+                <div class="input-pair">
+                    <label for="intRecipeIngredientAmount1">Amount1</label>
+                    <input id="intRecipeIngredientAmount1" name="intRecipeIngredientAmount1" type="text">
+                </div>
+            </div>
+            
+            <div class="add-ingredient-wrapper">
+                <div class="input-pair">
+                    <label for="selRecipeIngredient2">Ingredient2</label>
+                    <select name="selRecipeIngredient2" id="selRecipeIngredient2">
+                        <?php
+                            // $pdo defined in components/header.php
+                            $sqlQuery = 'SELECT nFoodItemId, cName FROM tfooditem';
+                            $stmt = $pdo->prepare($sqlQuery);
+                            $stmt->execute();
+                            $objFoodItems = $stmt->fetchAll(); 
+                            
+                            foreach($objFoodItems as $objFoodItem) { ?>
+                                <option value="<?=$objFoodItem->nFoodItemId;?>"><?=$objFoodItem->cName;?></option>    
+                            <?php } ?>
+                    </select>
+                </div>
+                <div class="input-pair">
+                    <label for="selRecipeIngredientMeassurement2">Meassurement unit2</label>
+                    <select name="selRecipeIngredientMeassurement2" id="selRecipeIngredientMeassurement2">
+                        <?php
+                            // $pdo defined in components/header.php
+                            $sqlQuery = 'SELECT nMeassurementId, cName FROM tmeassurement';
+                            $stmt = $pdo->prepare($sqlQuery);
+                            $stmt->execute();
+                            $objMeassurements = $stmt->fetchAll(); 
+
+                            foreach($objMeassurements as $objMeassurement) { ?>
+                                <option value="<?=$objMeassurement->nMeassurementId;?>"><?=$objMeassurement->cName;?></option>    
+                            <?php } ?>
+                    </select>
+                </div>
+                <div class="input-pair">
+                    <label for="intRecipeIngredientAmount2">Amount2</label>
+                    <input id="intRecipeIngredientAmount2" name="intRecipeIngredientAmount2" type="text">
+                </div>
+            </div>
+
+            <div class="add-ingredient-wrapper">
+                <div class="input-pair">
+                    <label for="selRecipeIngredient3">Ingredient3</label>
+                    <select name="selRecipeIngredient3" id="selRecipeIngredient3">
+                        <?php
+                            // $pdo defined in components/header.php
+                            $sqlQuery = 'SELECT nFoodItemId, cName FROM tfooditem';
+                            $stmt = $pdo->prepare($sqlQuery);
+                            $stmt->execute();
+                            $objFoodItems = $stmt->fetchAll(); 
+                            
+                            foreach($objFoodItems as $objFoodItem) { ?>
+                                <option value="<?=$objFoodItem->nFoodItemId;?>"><?=$objFoodItem->cName;?></option>    
+                            <?php } ?>
+                    </select>
+                </div>
+                <div class="input-pair">
+                    <label for="selRecipeIngredientMeassurement3">Meassurement unit3</label>
+                    <select name="selRecipeIngredientMeassurement3" id="selRecipeIngredientMeassurement3">
+                        <?php
+                            // $pdo defined in components/header.php
+                            $sqlQuery = 'SELECT nMeassurementId, cName FROM tmeassurement';
+                            $stmt = $pdo->prepare($sqlQuery);
+                            $stmt->execute();
+                            $objMeassurements = $stmt->fetchAll(); 
+
+                            foreach($objMeassurements as $objMeassurement) { ?>
+                                <option value="<?=$objMeassurement->nMeassurementId;?>"><?=$objMeassurement->cName;?></option>    
+                            <?php } ?>
+                    </select>
+                </div>
+                <div class="input-pair">
+                    <label for="intRecipeIngredientAmount3">Amount3</label>
+                    <input id="intRecipeIngredientAmount3" name="intRecipeIngredientAmount3" type="text">
+                </div>
+            </div>
+
+            <div class="add-ingredient-wrapper">
+                <div class="input-pair">
+                    <label for="selRecipeIngredient4">Ingredient4</label>
+                    <select name="selRecipeIngredient4" id="selRecipeIngredient4">
+                        <?php
+                            // $pdo defined in components/header.php
+                            $sqlQuery = 'SELECT nFoodItemId, cName FROM tfooditem';
+                            $stmt = $pdo->prepare($sqlQuery);
+                            $stmt->execute();
+                            $objFoodItems = $stmt->fetchAll(); 
+                            
+                            foreach($objFoodItems as $objFoodItem) { ?>
+                                <option value="<?=$objFoodItem->nFoodItemId;?>"><?=$objFoodItem->cName;?></option>    
+                            <?php } ?>
+                    </select>
+                </div>
+                <div class="input-pair">
+                    <label for="selRecipeIngredientMeassurement4">Meassurement unit4</label>
+                    <select name="selRecipeIngredientMeassurement4" id="selRecipeIngredientMeassurement4">
+                        <?php
+                            // $pdo defined in components/header.php
+                            $sqlQuery = 'SELECT nMeassurementId, cName FROM tmeassurement';
+                            $stmt = $pdo->prepare($sqlQuery);
+                            $stmt->execute();
+                            $objMeassurements = $stmt->fetchAll(); 
+
+                            foreach($objMeassurements as $objMeassurement) { ?>
+                                <option value="<?=$objMeassurement->nMeassurementId;?>"><?=$objMeassurement->cName;?></option>    
+                            <?php } ?>
+                    </select>
+                </div>
+                <div class="input-pair">
+                    <label for="intRecipeIngredientAmount4">Amount4</label>
+                    <input id="intRecipeIngredientAmount4" name="intRecipeIngredientAmount4" type="text">
+                </div>
+            </div>
+
+            <button id="btnCreateRecipe" type="submit" name="btnCreateRecipe" onclick="createRecipe(this)">Create</button>
+
+        </form>
     </section>
+
 </div>
-
-
 
 <?php require_once('components/footer.php'); ?>
