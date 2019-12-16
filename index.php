@@ -421,8 +421,52 @@
         </form>
     </section>
 
-    <!-- SEARCH RECIPES BY PANTRY ID -->
+    <!-- RECIPE INGREDIENTS LIST -->
     <section id="13">
+        <h2 class="section-title">Recipe ingredient list</h2>
+        <table>
+                <tr>
+                    <th>Recipe id</th>
+                    <th>Recipe name</th>
+                    <th>Food item id</th>
+                    <th>Food item name</th>
+                    <th>Amount</th>
+                    <th>Meassurement id</th>
+                    <th>Meassurement name</th>
+                </tr>
+                <?php 
+                $sqlQuery = "SELECT trecipeingredient.*, trecipe.cTitle AS cRecipeTitle, 
+                tfooditem.cName AS cFoodItemName, 
+                tmeassurement.cName AS cMeassurementName
+                FROM trecipeingredient
+                INNER JOIN trecipe ON trecipe.nRecipeId = trecipeingredient.nRecipeId
+                INNER JOIN tfooditem ON tfooditem.nFoodItemId = trecipeingredient.nFoodItemId
+                INNER JOIN tmeassurement ON tmeassurement.nMeassurementId = trecipeingredient.nMeassurementId";
+                $stmt = $pdo->prepare($sqlQuery);
+                $stmt->execute();
+                $recipeingredients = $stmt->fetchAll(); 
+                foreach($recipeingredients as $recipeingredient) {?>
+                    <tr>
+                        <td><?=$recipeingredient->nRecipeId?></td>
+                        <td><?=$recipeingredient->cRecipeTitle?></td>
+
+                        <td><?=$recipeingredient->nFoodItemId?></td>
+                        <td><?=$recipeingredient->cFoodItemName?></td>
+
+                        <td><?=$recipeingredient->nAmount?></td>
+                        
+                        <td><?=$recipeingredient->nMeassurementId?></td>
+                        <td><?=$recipeingredient->cMeassurementName?></td>
+                        <td><a href="single-recipe-ingredient.php?<?="recipeid=$recipeingredient->nRecipeId&fooditemid=$recipeingredient->nFoodItemId"?>">Edit</a></td>
+
+                    </tr>
+                <?php } ?>
+            </table>
+        
+    </section>
+
+    <!-- SEARCH RECIPES BY PANTRY ID -->
+    <section id="14">
         <h2 class="section-title">Search recipes by pantry id</h2>
         <form action="" id="frmSearchRecipeByPantryId">
             <div class="input-pair">
@@ -437,6 +481,160 @@
                 <th>Description</th>
             </tr>
         </table>
+    </section>
+
+    <!-- CREATE PANTRY -->
+    <section id="15">
+        <h2 class="section-title">Create pantry</h2>
+        <form action="" method="POST" id="formCreatePantry">
+            <p class="strong">Pantry information</p>
+            <div class="input-pair">
+                <label for="txtPantryName">Name</label>
+                <input id="txtPantryName" name="txtPantryName" type="text">
+            </div>
+            <div class="input-pair">
+                <label for="selPantryUserId"></label>
+                <select name="selPantryUserId" id="selPantryUserId">
+                <?php
+                    $sqlQuery = "SELECT nUserId, cName, cSurname FROM tuser";
+                    $stmt = $pdo->prepare($sqlQuery);
+                    $stmt->execute();
+                    $users = $stmt->fetchAll();
+                    foreach( $users as $user ) { ?>
+                        <option value="<?=$user->nUserId;?>"><?="$user->cName $user->cSurname";?></option>
+                    <?php } ?>
+                                
+                </select>
+            </div>
+            <button id="btnCreatePantry" type="submit" name="btnCreatePantry" onclick="createPantry(this)">Create</button>
+        </form>
+    </section>
+
+    <!-- PANTRY LIST -->
+    <section id="16">
+        <h2 class="section-title">Pantries</h2>
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Owner</th>
+                </tr>
+                <?php 
+                $sqlQuery = "SELECT * FROM tpantry";
+                $stmt = $pdo->prepare($sqlQuery);
+                $stmt->execute();
+                $pantries = $stmt->fetchAll(); 
+                foreach($pantries as $pantry) {?>
+                    <tr>
+                        <td><?=$pantry->nPantryId;?></td>
+                        <td><?=$pantry->cName;?></td>
+                        <td><?=$pantry->nUserId;?></td>
+                        <td><a href="single-pantry.php?id=<?=$pantry->nPantryId;?>">View contents</a></td>
+                    </tr>
+                <?php } ?>
+            </table>
+    </section>
+
+    <!-- ADD PANTRY ITEMS -->
+    <section id="17">
+        <h2 class="section-title">Add pantry ingredient</h2>
+        <form id="frmAddPantryIngredient" action="" method="POST">
+            <div class="input-pair">
+                <label for="nPantryPantryId">Pantry</label>
+                <select name="nPantryPantryId" id="nPantryPantryId">
+                    <?php 
+                        $sqlQuery           = "SELECT nPantryId, cName FROM tpantry";
+                        $stmt               = $pdo->prepare($sqlQuery);
+                        $stmt->execute();
+                        $rows               = $stmt->fetchAll();
+                        foreach($rows as $row) { ?>
+                        <option value="<?=$row->nPantryId;?>"><?=$row->cName;?></option>
+                    <?php } ?>
+                </select>
+            </div>
+
+            <div class="input-pair">
+                <label for="nPantryFoodItemId">Food item</label>
+                <select name="nPantryFoodItemId" id="nPantryFoodItemId">
+                    <?php 
+                        $sqlQuery           = "SELECT nFoodItemId, cName FROM tfooditem";
+                        $stmt               = $pdo->prepare($sqlQuery);
+                        $stmt->execute();
+                        $rows               = $stmt->fetchAll();
+                        foreach($rows as $row) { ?>
+                        <option value="<?=$row->nFoodItemId;?>"><?=$row->cName;?></option>
+                    <?php } ?>
+                </select>
+            </div>
+
+            <div class="input-pair">
+                <label for="nPantryMeassurementId">Meassurement</label>
+                <select name="nPantryMeassurementId" id="nPantryMeassurementId">
+                    <?php 
+                        $sqlQuery           = "SELECT nMeassurementId, cName FROM tmeassurement";
+                        $stmt               = $pdo->prepare($sqlQuery);
+                        $stmt->execute();
+                        $rows               = $stmt->fetchAll();
+                        foreach($rows as $row) { ?>
+                        <option value="<?=$row->nMeassurementId;?>"><?=$row->cName;?></option>
+                    <?php } ?>
+                </select>
+            </div>
+
+            <div class="input-pair">
+                <label for="dPantryItemExpiration">Expiration date</label>
+                <input type="date" name="dPantryItemExpiration" id="dPantryItemExpiration">
+            </div>
+
+            <div class="input-pair">
+                <label for="nPantryIngredientAmount">Amount</label>
+                <input id="nPantryIngredientAmount" name="nPantryIngredientAmount" type="text">
+            </div>
+            
+            <button id="btnAddFoodItemToPantry" type="submit" name="btnAddFoodItemToPantry" onclick="addFoodItemToPantry(this)">Add food item</button>
+        </form>
+    </section>
+
+    <!-- PANTRY ITEMS LIST -->
+    <section id="18">
+        <h2 class="section-title">Pantry items</h2>
+            <table>
+                <tr>
+                    <th>Pantry id</th>
+                    <th>Pantry name</th>
+                    <th>Food item id</th>
+                    <th>Food item name</th>
+                    <th>Amount</th>
+                    <th>Meassurement id</th>
+                    <th>Meassurement name</th>
+                    <th>Expiration date</th>
+                </tr>
+                <?php 
+                $sqlQuery = "SELECT tpantryitem.*,
+                                 tfooditem.cName AS cFoodItemName,
+                                 tpantry.cName AS cPantryName,
+                                 tmeassurement.cName AS cMeassurementName
+                            FROM tpantryitem 
+                            INNER JOIN tfooditem ON tfooditem.nFoodItemId = tpantryitem.nFoodItemId
+                            INNER JOIN tpantry ON tpantry.nPantryId = tpantryitem.nPantryId
+                            INNER JOIN tmeassurement ON tmeassurement.nMeassurementId = tpantryitem.nMeassurementId";
+                $stmt = $pdo->prepare($sqlQuery);
+                $stmt->execute();
+                $pantryitems = $stmt->fetchAll(); 
+                foreach($pantryitems as $pantryitem) {?>
+                    <tr>
+                        <td><?=$pantryitem->nPantryId;?></td>
+                        <td><?=$pantryitem->cPantryName;?></td>
+                        <td><?=$pantryitem->nFoodItemId;?></td>
+                        <td><?=$pantryitem->cFoodItemName;?></td>
+                        <td><?=$pantryitem->nAmount;?></td>
+                        <td><?=$pantryitem->nMeassurementId;?></td>
+                        <td><?=$pantryitem->cMeassurementName;?></td>
+                        <td><?=$pantryitem->dExpiration;?></td>
+                        <td><a href="single-pantryitem.php?<?="pantryid=$pantryitem->nPantryId&fooditemid=$pantryitem->nFoodItemId&expiration=$pantryitem->dExpiration"?>">Edit</a></td>
+                    </tr>
+                <?php } ?>
+            </table>
     </section>
 </div>
 

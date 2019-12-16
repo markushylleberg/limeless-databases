@@ -2,8 +2,7 @@
 /**
  * ****************************************
  * API
- * Insert user into database
- * Insert users credit card into database
+ * Update recipe ingredient
  * ****************************************
  */
 
@@ -28,30 +27,46 @@ $options    = [
 /**
  * PDO
  * Catch potential error messages
- */
-try {
+ */try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
 // Set variables
-$intRecipeId        = $_POST['intRecipeId'];
-$NEWcTitle          = $_POST['txtNewRecipeTitle'];
-$NEWcDescription    = $_POST['txtNewRecipeDescription'];
+$OLDnRecipeId           = $_POST['nOldRecipeItemRecipeId'];
+$NEWnRecipeId           = $_POST['nNewRecipeItemRecipeId'];
+
+$OLDnFoodItemId         = $_POST['nOldRecipeItemFoodItemId'];
+$NEWnFoodItemId         = $_POST['nNewRecipeItemFoodItemId'];
+
+$NEWnAmount             = $_POST['nNewRecipeItemAmount'];
+
+$NEWnMeassurementId     = $_POST['nNewRecipeItemMeassurementId'];
+
+
 
 /**
  * SQL query 
  * Update user into db
  */
-$sqlQuery = "UPDATE trecipe SET cTitle = :cTitle, cDescription = :cDescription WHERE nRecipeId = :nRecipeId";
+$sqlQuery = "UPDATE trecipeingredient 
+            SET nRecipeId = :NEWnRecipeId,
+                nFoodItemId = :NEWnFoodItemId,
+                nAmount = :NEWnAmount,
+                nMeassurementId = :NEWnMeassurementId
+            WHERE nRecipeId = :OLDnRecipeId AND nFoodItemId = :OLDnFoodItemId";
 $stmt = $pdo->prepare($sqlQuery);
 $stmt->execute([
-    'cTitle'        => $NEWcTitle,
-    'cDescription'  => $NEWcDescription,
-    'nRecipeId'     => $intRecipeId,
+    'NEWnRecipeId'          => $NEWnRecipeId,
+    'NEWnFoodItemId'        => $NEWnFoodItemId,
+    'NEWnAmount'            => $NEWnAmount,
+    'NEWnMeassurementId'    => $NEWnMeassurementId,
+    'OLDnRecipeId'          => $OLDnRecipeId,
+    'OLDnFoodItemId'        => $OLDnFoodItemId,
 ]);
 
+    
 $pdo = null;
 echo '{"status:1, "message":"Success", "line":"'.__LINE__.'"}';
 //******************** FUNCTIONS ********************/

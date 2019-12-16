@@ -125,6 +125,7 @@ function submitFoodItemUpdate(clicked) {
         console.log('fail') 
     })
 }
+
 function deleteFoodItem(clicked) {
     let nFoodItemId = $(clicked).data('food-item-id')
     $.ajax({
@@ -147,6 +148,39 @@ function createRecipe(clicked) {
         console.log('ok', e)
     }).fail(e=>{
         console.log('fail')
+    })
+}
+
+function updateRecipe(clicked) {
+    const form = $(clicked).parent()
+    $.ajax({
+        type: 'POST',
+        url: './apis/api-update-recipe.php',
+        data: $(form).serialize()
+    }).done(e=>{
+        // console.log('ok', e)
+        const container = document.querySelector('.recipe')
+        const message = `<a href="index.php">success! go back</a>`
+        $(container).append(message)
+    }).fail(e=>{
+        console.log('fail')
+    })
+
+}
+
+function updateRecipeItem(clicked) {
+    let form = $(clicked).parent()
+    $.ajax({
+        type: 'POST',
+        url: './apis/api-update-recipe-item.php',
+        data: $(form).serialize()
+    }).done(e=>{
+        console.log('ok', e) 
+        const container = document.querySelector('.recipeitem')
+        const message = `<a href="index.php">success! go back</a>`
+        $(container).append(message)
+    }).fail(e=>{
+        console.log('fail') 
     })
 }
 
@@ -240,5 +274,47 @@ function searchRecipesByPantryId(clicked) {
 
     }).fail(e=>{
         console.log('fail')
+    })
+}
+
+function createPantry(clicked) {
+    let form = $(clicked).parent()
+    $.ajax({
+        type: 'POST',
+        url: './apis/api-create-pantry.php',
+        data: $(form).serialize()
+    }).done(e=>{
+        console.log(e)
+    }).fail(e=>{
+        console.log('fail')
+    })
+}
+
+function addFoodItemToPantry(clicked) {
+    let form = $(clicked).parent()
+    $.ajax({
+        type: 'POST',
+        url: './apis/api-add-pantry-food-item.php',
+        data: $(form).serialize()
+    }).done(e=>{
+        console.log(e)
+    }).fail(e=>{
+        console.log('fail')
+    })
+}
+
+function updatePantryItem(clicked) {
+    let form = $(clicked).parent()
+    $.ajax({
+        type: 'POST',
+        url: './apis/api-update-pantry-item.php',
+        data: $(form).serialize()
+    }).done(e=>{
+        // console.log('ok', e) 
+        const container = document.querySelector('.pantryitem')
+        const message = `<a href="index.php">success! go back</a>`
+        $(container).append(message)
+    }).fail(e=>{
+        console.log('fail') 
     })
 }

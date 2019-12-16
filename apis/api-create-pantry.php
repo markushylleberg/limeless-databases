@@ -2,8 +2,7 @@
 /**
  * ****************************************
  * API
- * Insert user into database
- * Insert users credit card into database
+ * Insert pantry into database
  * ****************************************
  */
 
@@ -11,6 +10,7 @@
 if(empty($_POST)) {
     sendErrorMessage('Nothing posted', __LINE__);
 }
+
 
 /**
  * Database connection
@@ -25,6 +25,12 @@ $options    = [
     PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION,
 ];
 
+
+// Set variables
+$cName                 = $_POST['txtPantryName'];
+$nUserId                = $_POST['selPantryUserId'];
+
+
 /**
  * PDO
  * Catch potential error messages
@@ -35,25 +41,21 @@ try {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
-// Set variables
-$intRecipeId        = $_POST['intRecipeId'];
-$NEWcTitle          = $_POST['txtNewRecipeTitle'];
-$NEWcDescription    = $_POST['txtNewRecipeDescription'];
-
 /**
  * SQL query 
- * Update user into db
+ * Insert recipe into db
  */
-$sqlQuery = "UPDATE trecipe SET cTitle = :cTitle, cDescription = :cDescription WHERE nRecipeId = :nRecipeId";
-$stmt = $pdo->prepare($sqlQuery);
+$sql = "INSERT INTO tpantry (cName, nUserId)
+        VALUES(:cName, :nUserId)";
+$stmt = $pdo->prepare($sql);
 $stmt->execute([
-    'cTitle'        => $NEWcTitle,
-    'cDescription'  => $NEWcDescription,
-    'nRecipeId'     => $intRecipeId,
-]);
+    'cName'     => $cName,
+    'nUserId'   => $nUserId,
+    ]);
+ 
 
 $pdo = null;
-echo '{"status:1, "message":"Success", "line":"'.__LINE__.'"}';
+// echo '{"status:1, "message":"Success", "line":"'.__LINE__.'"}';
 //******************** FUNCTIONS ********************/
 function sendErrorMessage($sMessage, $iLine) {
     echo '{"status:0, "message":"'.$sMessage.'", "line":"'.$iLine.'"}';

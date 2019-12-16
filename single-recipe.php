@@ -17,17 +17,6 @@ $options    = [
     PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION
 ];
 $pdo    = new PDO($dsn, $user, $pass, $options);
-// $sqlQuery = 'SELECT trecipe.nRecipeId AS nRecipeId, 
-//                     trecipe.cTitle AS cRecipeTitle, 
-//                     trecipe.cDescription AS cRecipeDescription,
-//                     tfooditem.cName AS cFoodItemName,
-//                     tmeassurement.cName AS cMeassurementName,
-//                     trecipeingredient.nAmount AS nRecipeIngredientAmount
-//              FROM trecipeingredient
-//              INNER JOIN trecipe ON trecipe.nRecipeId = trecipeingredient.nRecipeId
-//              INNER JOIN tfooditem ON tfooditem.nFoodItemId = trecipeingredient.nFoodItemId
-//              INNER JOIN tmeassurement ON tmeassurement.nMeassurementId = trecipeingredient.nMeassurementId 
-//              WHERE trecipeingredient.nRecipeId = :nRecipeId';
 
 $sqlQuery = "SELECT * FROM trecipe WHERE trecipe.nRecipeId = :nRecipeId";
 $stmt = $pdo->prepare($sqlQuery);
@@ -35,28 +24,21 @@ $stmt->execute([
     'nRecipeId'=>$nRecipeId
 ]);
 $recipe = $stmt->fetchObject(); 
-// echo json_encode($recipe);
 ?>
-<div id="recipe-<?=$recipe->nRecipeId?>" class="recipe">
-    <h3 class="title"><?=$recipe->cTitle;?></h3>
-    <p><?=$recipe->cDescription;?></p>
-    <ul>
-        <?php
-            $sqlQuery = "SELECT tfooditem.cName AS cFoodItemName, 
-            tmeassurement.cName AS cMeassurementName, 
-            trecipeingredient.nAmount AS nRecipeIngredientAmount
-            FROM trecipeingredient
-            INNER JOIN tfooditem ON tfooditem.nFoodItemId = trecipeingredient.nFoodItemId
-            INNER JOIN tmeassurement ON tmeassurement.nMeassurementId = trecipeingredient.nMeassurementId 
-            WHERE nRecipeId = :nRecipeId";
-            $stmt = $pdo->prepare($sqlQuery);
-            $stmt->execute(['nRecipeId' => $nRecipeId]);
-            $ingredients = $stmt->fetchAll(); 
-            // echo json_encode($ingredients);
-            foreach($ingredients as $ingredient) { ?> 
-                <li class="ingredient"><?="$ingredient->nRecipeIngredientAmount $ingredient->cMeassurementName $ingredient->cFoodItemName"?></li>
-            <?php } ?>
 
-    </ul>
+<div id="recipe-<?=$recipe->nRecipeId?>" class="recipe">
+    <form action="" method="POST" id="frmUpdateRecipe">
+    <input type="hidden" name="intRecipeId" value="<?=$recipe->nRecipeId?>">
+        <div class="input-pair">
+            <label for="txtNewRecipeTitle">
+            <input id="txtNewRecipeTitle" name="txtNewRecipeTitle" type="text" value="<?=$recipe->cTitle?>">
+        </div>
+        <div class="input-pair">
+            <label for="txtNewRecipeDescription">
+            <input id="txtNewRecipeDescription" name="txtNewRecipeDescription" type="text" value="<?=$recipe->cDescription?>">
+        </div>
+        <div id="btnUpdateRecipe" type="submit" name="btnUpdateRecipe" onclick="updateRecipe(this)">Update recipe</div>
+    </form>
 </div>
+
 <?php require_once('components/footer.php'); ?>
