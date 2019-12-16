@@ -40,5 +40,13 @@ header {
 }
 .content-wrapper {
     max-width: 90vw;
+    padding: 10px 0px 100px;
     background-color: purple;
+}
+/*____________________ RECIPES ____________________*/
+.recipe {
+    margin: 20px 0px;
+}
+.recipe-ingredient > div {
+    display: inline-block;
 }

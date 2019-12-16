@@ -1,17 +1,19 @@
 <?php
+
 /**
  * ****************************************
  * API
- * Update food item
+ * Return recipe information based on the pantry ID submitted
  * ****************************************
  */
 
 // Exit if nothing sent
-if(empty($_POST)) {
-    sendErrorMessage('Nothing posted', __LINE__);
-}
 
-/**
+    if(empty($_GET)) {
+        sendErrorMessage('Nothing posted', __LINE__);
+    }
+
+    /**
  * Database connection
  * Change $host and $root if needed
  */
@@ -22,38 +24,33 @@ $db = 'myvirtualpantry';
 $dsn = "mysql:host=$host;dbname=$db";
 $options = [
     PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE    => PDO::FETCH_ASSOC
 ];
-
-/**
- * PDO
- * Catch potential error messages
- */try {
+try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
 // Set variables
-$nFoodItemId        = $_POST['nFoodItemId'];
-$cName              = $_POST['txtName'];
-$nCategoryId        = $_POST['nCategoryId'];
+$pantryId = $_GET['id'];
 
 /**
  * SQL query 
- * Update user into db
+ * Insert user into db
  */
-$sql = "UPDATE tfooditem 
-SET cName = :cName, nCategoryId = :nCategoryId WHERE nFoodItemId = :nFoodItemId";
+$sql = "CALL pGetRecipesBasedOnPantryId(:nPantryId)";
 $stmt = $pdo->prepare($sql);
-$stmt->bindParam(':cName', $cName, PDO::PARAM_STR);
-$stmt->bindParam(':nCategoryId', $nCategoryId, PDO::PARAM_STR);
-$stmt->bindParam(':nFoodItemId', $nFoodItemId, PDO::PARAM_INT);
-$stmt->execute();
+$stmt->execute([
+    'nPantryId'             => $pantryId
+    ]);
 
+    echo json_encode($stmt->fetchAll());
     
 $pdo = null;
-echo '{"status:1, "message":"Success", "line":"'.__LINE__.'"}';
-//******************** FUNCTIONS ********************/
+
+
+    //******************** FUNCTIONS ********************/
 function sendErrorMessage($sMessage, $iLine) {
     echo '{"status:0, "message":"'.$sMessage.'", "line":"'.$iLine.'"}';
     exit;

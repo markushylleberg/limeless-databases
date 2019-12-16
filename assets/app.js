@@ -10,6 +10,7 @@ function submitSignup(clicked) {
         console.log('fail') 
     })
 }
+
 function deleteUser(clicked) {
     let nUserId = $(clicked).data('user-id')
     $.ajax({
@@ -21,6 +22,7 @@ function deleteUser(clicked) {
         console.log('fail') 
     })
 }
+
 function cancelUser(clicked) {
     let nUserId = $(clicked).data('user-id')
     $.ajax({
@@ -32,6 +34,7 @@ function cancelUser(clicked) {
         console.log('fail') 
     })
 }
+
 function submitUserUpdate(clicked) {
     let form = $(clicked).parent()
     $.ajax({
@@ -44,6 +47,7 @@ function submitUserUpdate(clicked) {
         console.log('fail') 
     })
 }
+
 function createCreditCard(clicked) {
     let form = $(clicked).parent()
     $.ajax({
@@ -56,6 +60,7 @@ function createCreditCard(clicked) {
         console.log('fail') 
     })
 }
+
 function deleteCreditcard(clicked) {
     let nCreditcardId = $(clicked).data('creditcard-id')
     $.ajax({
@@ -67,6 +72,7 @@ function deleteCreditcard(clicked) {
         console.log('fail') 
     })
 }
+
 function submitCreditcardUpdate(clicked) {
     let form = $(clicked).parent()
     $.ajax({
@@ -79,6 +85,7 @@ function submitCreditcardUpdate(clicked) {
         console.log('fail') 
     })
 }
+
 function submitPayment(clicked) {
     // console.log('clicked')
     let form = $(clicked).parent()
@@ -92,6 +99,7 @@ function submitPayment(clicked) {
         console.log('fail') 
     })
 }
+
 function createFoodItem(clicked) {
     let form = $(clicked).parent()
     $.ajax({
@@ -104,6 +112,7 @@ function createFoodItem(clicked) {
         console.log('fail') 
     })
 }
+
 function submitFoodItemUpdate(clicked) {
     let form = $(clicked).parent()
     $.ajax({
@@ -127,6 +136,7 @@ function deleteFoodItem(clicked) {
         console.log('fail') 
     })
 }
+
 function createRecipe(clicked) {
     let form = $(clicked).parent()
     $.ajax({
@@ -139,6 +149,20 @@ function createRecipe(clicked) {
         console.log('fail')
     })
 }
+
+function addIngredientToRecipe(clicked) {
+    const form = $(clicked).parent()
+    $.ajax({
+        type: 'POST',
+        url: './apis/api-add-recipe-ingredient.php',
+        data: $(form).serialize()
+    }).done(e=>{
+        console.log('ok', e)
+    }).fail(e=>{
+        console.log('fail')
+    })
+}
+
 function searchUsers(clicked){
     let form = clicked.parentElement.parentElement;
     let userName = document.querySelector('#txtFirstNameSearch').value;
@@ -187,4 +211,34 @@ function searchUsers(clicked){
        }).fail(e=>{
            console.log('fail') 
        })
+}
+
+function searchRecipesByPantryId(clicked) {
+    const iPantryId = $(document.querySelector('#intPantryId')).val() 
+    $.ajax({
+        url: `./apis/api-search-recipes-by-pantry-id.php?id=${iPantryId}`,
+        type: 'GET'
+    }).done(e=>{
+        // console.log(e);
+
+        const existing = document.querySelectorAll('.recipe-result')
+        existing.forEach(elm=>{
+            $(elm).remove()
+        })
+        let recipes = JSON.parse(e);
+        for(let recipe of recipes) {
+            let tr = document.createElement('tr')
+            $(tr).addClass('recipe-result')
+            $(tr).html(
+                `<td>${recipe.cTitle}</td>
+                <td>${recipe.cDescription}</td>
+                <td><a href="single-recipe.php?id=${recipe.nRecipeId}">Read full</a></td>`
+                )
+                $(document.getElementById('recipesSearchResult')).append(tr)
+        }
+
+
+    }).fail(e=>{
+        console.log('fail')
+    })
 }

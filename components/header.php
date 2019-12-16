@@ -26,8 +26,6 @@ $pdo->setAttribute(
 </head>
 <body>
 <header>
-<nav>
-<iframe src="https://giphy.com/embed/1oIMaEKhA0WLEV3KRj" width="50" height="50" frameBorder="0" class="giphy-embed"></iframe>
-</nav>
+
 </header>
 <div id="pageContent">

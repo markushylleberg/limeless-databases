@@ -40,10 +40,6 @@ $nFoodItemId = $_GET['id'];
                     <input id="txtName" type="text" name="txtName" value="<?=$fooditem->cName;?>">
                 </div>
                 <div class="input-pair">
-                    <label for="nMeassurementId">Meassurement id</label>
-                    <input id="nMeassurementId" type="text" name="nMeassurementId" value="<?=$fooditem->nMeassurementId;?>">
-                </div>
-                <div class="input-pair">
                     <label for="nCategoryId">Category id</label>
                     <input id="nCategoryId" type="text" name="nCategoryId" value="<?=$fooditem->nCategoryId;?>">
                 </div>
