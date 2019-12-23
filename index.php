@@ -100,9 +100,10 @@
                             <td><a onclick="cancelUser(this)" data-user-id="<?=$user->nUserId;?>" href="#">Cancel</a></td>
                             <td><a href="update-user.php?id=<?= $user->nUserId; ?>">Update</a></td>
                         </tr>
+                       
                     <?php }; ?>
-
-                </table>
+                     </table>
+                     <p>Amount of users: <b><?php echo count($users) ?></b></p>
             </div>
             <p class="strong">Search user</p>
             <form id="frmSearchUsers" action="">
@@ -148,7 +149,8 @@
                         <th>Monetary amount</th>
                         <th>Owner</th>
                     </tr>
-                    <?php foreach($creditcards as $creditcard) { ?> 
+                    <?php foreach($creditcards as $creditcard) { ?>
+
                         <tr>
                             <td><?=$creditcard->nCreditCardId;?></td>
                             <td><?=$creditcard->cIBAN;?></td>
@@ -217,14 +219,25 @@
                     <th>Amount</th>
                     <th>Creditcard</th>
                 </tr>
-                <?php foreach($payments as $payment) { ?>
+                <?php
+                
+                $totalAmount = 0;
+                
+                foreach($payments as $payment){
+
+                    $totalAmount = $totalAmount + $payment->nAmount;
+                    
+                    ?>
                     <tr>
                         <td><?=$payment->dTransaction;?></td>
                         <td><?=$payment->nAmount;?></td>
                         <td><?=$payment->nCreditCardId;?></td>
                     </tr>
-                <?php } ?>
-            </table>
+                <?php }
+                                
+                ?>
+                </table>
+            <p>Total revenue: <b><?php echo $totalAmount;?></b></p>
         </div>
     </section>
 
@@ -286,10 +299,6 @@
             <div class="input-pair">
                 <label for="txtName">Name</label>
                 <input id="txtName" type="text" name="txtName">
-            </div>
-            <div class="input-pair">
-                <label for="nMeassurementId">Meassurement id</label>
-                <input id="nMeassurementId" type="text" name="nMeassurementId">
             </div>
             <div class="input-pair">
                 <label for="nCategoryId">Category id</label>
@@ -391,7 +400,7 @@
                 <label for="nFoodItemId">Food item</label>
                 <select name="nFoodItemId" id="nFoodItemId">
                     <?php 
-                        $sql = "SELECT nFoodItemId, cName FROM tfooditem";
+                        $sql = "SELECT nFoodItemId, cName FROM tfooditem ORDER BY cName";
                         $stmt = $pdo->prepare($sql);
                         $stmt->execute();
                         $rows = $stmt->fetchAll();
@@ -557,7 +566,7 @@
                 <label for="nPantryFoodItemId">Food item</label>
                 <select name="nPantryFoodItemId" id="nPantryFoodItemId">
                     <?php 
-                        $sqlQuery           = "SELECT nFoodItemId, cName FROM tfooditem";
+                        $sqlQuery           = "SELECT nFoodItemId, cName FROM tfooditem ORDER BY cName";
                         $stmt               = $pdo->prepare($sqlQuery);
                         $stmt->execute();
                         $rows               = $stmt->fetchAll();

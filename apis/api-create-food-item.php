@@ -37,7 +37,6 @@ try {
 
 // Set variables
 $cName              = $_POST['txtName'];
-$nMeassurementId    = $_POST['nMeassurementId'];
 $nCategoryId    = $_POST['nCategoryId'];
 
 
@@ -45,12 +44,11 @@ $nCategoryId    = $_POST['nCategoryId'];
  * SQL query 
  * Insert user into db
  */
-$sql = "INSERT INTO tfooditem (cName, nMeassurementId, nCategoryId)
-        VALUES(:cName, :nMeassurementId, :nCategoryId)";
+$sql = "INSERT INTO tfooditem (cName, nCategoryId)
+        VALUES(:cName, :nCategoryId)";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([
     'cName'             => $cName,
-    'nMeassurementId'   => $nMeassurementId,
     'nCategoryId'       => $nCategoryId
     ]);
 
